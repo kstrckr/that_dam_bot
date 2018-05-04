@@ -34,7 +34,7 @@ for dir in secondary_categories:
         # print(secondary_categories[i + 1][0], secondary_categories[i][0])
         temp_dirs = lines[secondary_categories[i][0]:secondary_categories[i + 1][0]]
         for line in temp_dirs:
-            if line[-1:] != ":" and line[-1:] != "\n":
+            if line[-1:] != ":" and len(line) > 0:
                 print(secondary_categories[i][1][:-1] + "/" + line)
         dirs.append(temp_dirs)
 
