@@ -1,2 +1,4 @@
 #seed text file
 *.txt
+
+*.pyc

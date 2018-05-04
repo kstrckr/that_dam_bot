@@ -1,47 +1,54 @@
 import re
 
-with open('directory.txt', 'r', encoding='utf-8') as raw_file:
-    raw_text = raw_file.read()
-    lines = raw_text.split('\n')
+class DamDirs:
+
+    primary_categories = []
+
+    secondary_categories = []
+
+    dirs = []
+
+    def __init__(self):
+        with open('directory.txt', 'r') as raw_file:
+            raw_text = raw_file.read()
+            lines = raw_text.split('\n')
 
 
-primary_categories = []
+        for line in lines:
+            if line[-1:] == ":" and line[0] != "/":
+                self.primary_categories.append(line)
 
-secondary_categories = []
+        # print(self.primary_categories[0])
 
-dirs = []
+        ref_index = range(0,10)
 
-for line in lines:
-    if line[-1:] == ":" and line[0] != "/":
-        primary_categories.append(line)
+        for i in ref_index:
+            for line in enumerate(lines):
+                if line[1][-1:] == ":":
+                    # print(line[1:len(self.primary_categories[0])])
+                    if line[1][1:len(self.primary_categories[i])] == self.primary_categories[i][:-1]:
+                        self.secondary_categories.append(line)
 
-# print(primary_categories[0])
+        i = 0
 
-ref_index = range(0,10)
+        for dir in self.secondary_categories:
+            
+            while i < len(self.secondary_categories) - 1:
+                # span = self.secondary_categories[i + 1][0] - self.secondary_categories[i][0]
+                # print(self.secondary_categories[i + 1][0], self.secondary_categories[i][0])
+                temp_dirs = lines[self.secondary_categories[i][0]:self.secondary_categories[i + 1][0]]
+                for line in temp_dirs:
+                    if line[-1:] != ":" and len(line) > 0:
+                        path = "//Storage/Editorial Storage" + self.secondary_categories[i][1][:-1] + "/" + line
+                        self.dirs.append(path)
 
-for i in ref_index:
-    for line in enumerate(lines):
-        if line[1][-1:] == ":":
-            # print(line[1:len(primary_categories[0])])
-            if line[1][1:len(primary_categories[i])] == primary_categories[i][:-1]:
-                secondary_categories.append(line)
+                i += 1
 
-i = 0
+# for line in self.dirs:
+#     if line[-4] == ".":
+#         print(line)
 
-for dir in secondary_categories:
-    
-    while i < len(secondary_categories) - 1:
-        span = secondary_categories[i + 1][0] - secondary_categories[i][0]
-        # print(secondary_categories[i + 1][0], secondary_categories[i][0])
-        temp_dirs = lines[secondary_categories[i][0]:secondary_categories[i + 1][0]]
-        for line in temp_dirs:
-            if line[-1:] != ":" and len(line) > 0:
-                path = secondary_categories[i][1][:-1] + "/" + line
-                dirs.append(path)
 
-        i += 1
-
-print(len(dirs), dirs[0])
-# for line in dirs:
-#     for entry in line:
-#         print(entry)
+if __name__ == '__main__':
+    for line in self.dirs[:50]:
+        print(line)
