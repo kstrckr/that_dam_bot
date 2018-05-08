@@ -25,12 +25,6 @@ class DamDirs:
             if line[-1:] == ":" and line[0] != "/":
                 self.primary_categories.append(line)
 
-        # ref_index = range(0,10)
-
-        print(self.primary_categories)
-
-
-
         for i in range(len(self.primary_categories)):
 
             if parse_kids == True:

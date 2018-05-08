@@ -42,3 +42,54 @@ class DbSetup:
 
         self.db_name = db_name
         self.conn = sqlite3.connect(self.db_name)
+
+class DbInterface:
+
+    query = 'SELECT * FROM dirs WHERE download_complete = 0 LIMIT 1'
+    db_name = 'dirs.db'
+
+    @classmethod
+    def db_monitor(self):
+
+        with sqlite3.connect(self.db_name) as conn: 
+            cur = conn.cursor()
+
+            queue_count = cur.execute('SELECT COUNT(*) FROM dirs WHERE download_complete = 0')
+            queue_check = cur.fetchone()
+
+        return queue_check
+    
+    @classmethod
+    def return_single_directory(self):
+        
+        with sqlite3.connect(self.db_name) as conn:
+            cur = conn.cursor()
+
+            cur.execute(self.query)
+
+            db_entry = cur.fetchone()
+            
+
+        single_download_directory = db_entry
+        
+        return single_download_directory
+    
+    @classmethod
+    def download_initiated(self, dir_in_progress):
+
+        path = [dir_in_progress]
+
+        with sqlite3.connect(self.db_name) as conn:
+            cur = conn.cursor()
+
+            cur.execute('UPDATE dirs SET in_progress = 1 WHERE dir = ?', path)
+
+    @classmethod
+    def download_complete(self, dir_complete):
+
+        path = [dir_complete]
+
+        with sqlite3.connect(self.db_name) as conn:
+            cur = conn.cursor()
+
+            cur.execute('UPDATE dirs SET download_complete = 1 WHERE dir = ?', path)
