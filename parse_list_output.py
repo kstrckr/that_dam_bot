@@ -8,8 +8,8 @@ class DamDirs:
 
     dirs = []
 
-    def __init__(self):
-        with open('directory.txt', 'r') as raw_file:
+    def __init__(self, filename):
+        with open(filename, 'r') as raw_file:
             raw_text = raw_file.read()
             lines = raw_text.split('\n')
 
@@ -34,9 +34,12 @@ class DamDirs:
         for dir in self.secondary_categories:
             
             while i < len(self.secondary_categories) - 1:
-                # span = self.secondary_categories[i + 1][0] - self.secondary_categories[i][0]
-                # print(self.secondary_categories[i + 1][0], self.secondary_categories[i][0])
-                temp_dirs = lines[self.secondary_categories[i][0]:self.secondary_categories[i + 1][0]]
+
+                if i == len(self.secondary_categories) - 2:
+                    temp_dirs = lines[self.secondary_categories[i][0]:-3]
+                else:
+                    temp_dirs = lines[self.secondary_categories[i][0]:self.secondary_categories[i + 1][0]]
+
                 for line in temp_dirs:
                     if line[-1:] != ":" and len(line) > 0:
                         path = "//Storage/Editorial Storage" + self.secondary_categories[i][1][:-1] + "/" + line
@@ -44,11 +47,11 @@ class DamDirs:
 
                 i += 1
 
-# for line in self.dirs:
-#     if line[-4] == ".":
-#         print(line)
-
-
 if __name__ == '__main__':
-    for line in self.dirs[:50]:
-        print(line)
+    
+    output_parsing = DamDirs('directory.txt')
+
+    with open('parsed_output.txt', 'w') as output_file:
+        for line in output_parsing.dirs:
+            write_line = line + "\n"
+            output_file.write(write_line)

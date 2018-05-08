@@ -4,17 +4,6 @@ import subprocess
 from gamil_sender import EmailUpdate
 from parse_list_output import DamDirs
 
-
-
-
-# update.send_email_update("latest update is")
-
-parsed_txt = DamDirs()
-
-dirs = parsed_txt.dirs
-
-args = ['zm', 'checkout', '--nowc', '-d', './']
-
 def download_from_dirs_list(dirs_list):
 
 
@@ -32,4 +21,10 @@ def download_from_dirs_list(dirs_list):
         except subprocess.CalledProcessError:
             EmailUpdate.send_email_update(path + ' has failed to download')
 
-download_from_dirs_list(dirs)
+parsed_txt = DamDirs('directory.txt')
+
+dirs = parsed_txt.dirs
+
+args = ['zm', 'checkout', '--nowc', '-d', './']
+
+# download_from_dirs_list(dirs)
