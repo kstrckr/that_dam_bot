@@ -11,10 +11,8 @@ class DbSetup:
         UNIQUE(dir))
     '''
 
-    insert_rows_cmd = '''INSERT INTO dirs (
-        VALUES (?, ?, ?, ?, ?)
-    )
-
+    insert_rows_cmd = '''INSERT INTO dirs
+        VALUES (?, ?, ?, ?, ?);
     '''
 
     def return_connect(self):
@@ -30,10 +28,13 @@ class DbSetup:
 
         list_of_insert_values = []
         
+
         for line in insert_data:
             list_of_insert_values.append((line, 0, '', '', 0))
 
-        self.conn.execute(self.insert_rows_cmd, list_of_insert_values)
+        print(len(list_of_insert_values))
+        with self.conn as conn:
+            conn.executemany(self.insert_rows_cmd, list_of_insert_values)
 
     def __init__(self, db_name):
 

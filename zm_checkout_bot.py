@@ -1,11 +1,27 @@
 import shlex
 import subprocess
 
-from gamil_sender import EmailUpdate
+from database_setup_and_seed import DbSetup
+# from gamil_sender import EmailUpdate
 from parse_list_output import DamDirs
 
-def download_from_dirs_list(dirs_list):
+def insert_dirs_to_db(dirs_list):
 
+    try:
+        db = DbSetup('dirs.db')
+        print('Database Connected')
+    except:
+        print('Error connecting to database')
+
+
+    print('Creating Table')
+    db.create_table()
+
+    print('Inserting directory records')
+    db.insert_dirs(dirs_list)
+
+
+def download_from_dirs_list(dirs_list):
 
     for path in dirs_list[50:75]:
         full_call = []
@@ -23,7 +39,9 @@ def download_from_dirs_list(dirs_list):
 
 parsed_txt = DamDirs('directory.txt')
 
-dirs = parsed_txt.dirs
+insert_dirs_to_db(parsed_txt.dirs)
+
+# dirs = parsed_txt.dirs
 
 args = ['zm', 'checkout', '--nowc', '-d', './']
 
