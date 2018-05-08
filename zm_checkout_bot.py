@@ -37,11 +37,12 @@ def download_from_dirs_list(dirs_list):
         except subprocess.CalledProcessError:
             EmailUpdate.send_email_update(path + ' has failed to download')
 
-parsed_txt = DamDirs('directory.txt')
+parsed_adult_dirs = DamDirs('directory.txt')
+parsed_kid_dirs = DamDirs('kids_dirs.txt')
 
-insert_dirs_to_db(parsed_txt.dirs)
+insert_dirs_to_db(parsed_adult_dirs.dirs)
 
-# dirs = parsed_txt.dirs
+# dirs = parsed_adult_dirs.dirs
 
 args = ['zm', 'checkout', '--nowc', '-d', './']
 
