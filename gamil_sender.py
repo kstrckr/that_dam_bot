@@ -7,9 +7,6 @@ import smtplib
 
 class EmailUpdate:
 # create message object instance
-
-    msg = None
-    message = None
     
     def send_email_update(self):
         

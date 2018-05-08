@@ -2,13 +2,20 @@ import re
 
 class DamDirs:
 
-    primary_categories = []
+    # primary_categories = []
 
-    secondary_categories = []
+    # secondary_categories = []
 
-    dirs = []
+    # dirs = []
 
-    def __init__(self, filename):
+    def __init__(self, filename, parse_kids=False):
+
+        self.primary_categories = []
+
+        self.secondary_categories = []
+
+        self.dirs = []
+
         with open(filename, 'r') as raw_file:
             raw_text = raw_file.read()
             lines = raw_text.split('\n')
@@ -18,16 +25,23 @@ class DamDirs:
             if line[-1:] == ":" and line[0] != "/":
                 self.primary_categories.append(line)
 
-        # print(self.primary_categories[0])
+        # ref_index = range(0,10)
 
-        ref_index = range(0,10)
+        print(self.primary_categories)
 
-        for i in ref_index:
-            for line in enumerate(lines):
-                if line[1][-1:] == ":":
-                    # print(line[1:len(self.primary_categories[0])])
-                    if line[1][1:len(self.primary_categories[i])] == self.primary_categories[i][:-1]:
+
+
+        for i in range(len(self.primary_categories)):
+
+            if parse_kids == True:
+                for line in enumerate(lines):
+                    if line[1] == self.primary_categories[i]:
                         self.secondary_categories.append(line)
+            else:
+                for line in enumerate(lines):
+                    if line[1][-1:] == ":":
+                        if line[1][1:len(self.primary_categories[i])] == self.primary_categories[i][:-1]:
+                            self.secondary_categories.append(line)
 
         i = 0
 
@@ -42,9 +56,12 @@ class DamDirs:
 
                 for line in temp_dirs:
                     if line[-1:] != ":" and len(line) > 0:
-                        path = "//Storage/Editorial Storage" + self.secondary_categories[i][1][:-1] + "/" + line
+                        if parse_kids == False and self.secondary_categories[i][1][:5] != "/Kids":
+                            path = "//Storage/Editorial Storage" + self.secondary_categories[i][1][:-1] + "/" + line
+                        else:
+                            path = "//Storage/Editorial Storage/Kids/" + self.secondary_categories[i][1][:-1] + "/" + line
                         self.dirs.append(path)
-                        
+                            
                 i += 1
 
 if __name__ == '__main__':
