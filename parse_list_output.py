@@ -44,7 +44,7 @@ class DamDirs:
                     if line[-1:] != ":" and len(line) > 0:
                         path = "//Storage/Editorial Storage" + self.secondary_categories[i][1][:-1] + "/" + line
                         self.dirs.append(path)
-
+                        
                 i += 1
 
 if __name__ == '__main__':
