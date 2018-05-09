@@ -1,3 +1,4 @@
+import datetime
 import sqlite3
 
 class DbSetup:
@@ -75,21 +76,31 @@ class DbInterface:
         return single_download_directory
     
     @classmethod
-    def download_initiated(self, dir_in_progress):
+    def set_download_initiated(self, dir_in_progress, value):
+        
+        if value == 1:
+            download_start = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            download_start = None
 
-        path = [dir_in_progress]
+        sql_values = [value, download_start, dir_in_progress]
 
         with sqlite3.connect(self.db_name) as conn:
             cur = conn.cursor()
 
-            cur.execute('UPDATE dirs SET in_progress = 1 WHERE dir = ?', path)
+            cur.execute('UPDATE dirs SET in_progress = ?, start_time=? WHERE dir = ?', sql_values)
 
     @classmethod
-    def download_complete(self, dir_complete):
+    def set_download_complete(self, dir_complete, value):
 
-        path = [dir_complete]
+        if value == 1:
+            download_end = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        else:
+            download_end = None
+
+        sql_values = [value, download_end, dir_complete]
 
         with sqlite3.connect(self.db_name) as conn:
             cur = conn.cursor()
 
-            cur.execute('UPDATE dirs SET download_complete = 1 WHERE dir = ?', path)
+            cur.execute('UPDATE dirs SET in_progress = 0, download_complete = ?, finish_time = ? WHERE dir = ?', sql_values)

@@ -11,10 +11,10 @@ class EmailUpdate:
     def send_email_update(self):
         
         # setup the parameters of the message
-        password = "Nic3Tri3Suck3r"
+        password = "Giltby3!"
         self.msg['From'] = "thatdambot@gmail.com"
-        self.msg['To'] = "kstrecker@gilt.com"
-        self.msg['Subject'] = "The first email test"
+        self.msg['To'] = 'kstrecker@gilt.com'
+        self.msg['Subject'] = "An update from That Dam Bot"
         
         # add in the message body
         self.msg.attach(MIMEText(self.message, 'plain'))
@@ -38,3 +38,9 @@ class EmailUpdate:
     def __init__(self, message_str):
         self.message = message_str
         self.msg = MIMEMultipart()
+
+if __name__ == "__main__":
+
+    test_message = EmailUpdate('Message Test from That Dam Bot')
+
+    test_message.send_email_update()
