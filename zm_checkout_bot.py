@@ -7,6 +7,7 @@ from database_setup_and_seed import DbSetup, DbInterface
 # from gamil_sender import EmailUpdate
 from parse_list_output import DamDirs
 
+
 def return_strf_now():
     return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -53,8 +54,8 @@ def download_from_dirs_list(dir_to_download, args):
 
 def zm_authenticate():
 
-    user = "svc_dam_prod"
-    pw = "6XPX1tJHueUxUN1"
+    user = "idiot_programmer"
+    pw = "myR3a1Pa55werd"
 
     auth_args = ['zm', '-s', 'EvolProd', '--username', user, '--password', pw, 'getcredentials']
 
@@ -72,7 +73,7 @@ def zm_authenticate():
 
 def zm_checkout_popen(dir_to_download):
 
-    checkout_args = ['zm', 'checkout', '--nowc', '-d', './']
+    checkout_args = ['zm', 'checkout', '--nowc', '-d', '/Volumes/CalDigit VR2/DAM_BACKUP']
 
     checkout_args.append(dir_to_download)
 
@@ -81,6 +82,8 @@ def zm_checkout_popen(dir_to_download):
     try:
         print('Downloading {}'.format(dir_to_download[27:]))
         interface = p.communicate()
+
+
 
         if interface[1] == 'Authentication failed, please try again with valid credentials.\n':
 

@@ -11,9 +11,9 @@ class EmailUpdate:
     def send_email_update(self):
         
         # setup the parameters of the message
-        password = "Giltby3!"
-        self.msg['From'] = "thatdambot@gmail.com"
-        self.msg['To'] = 'kstrecker@gilt.com'
+        password = "1mn01d10t"
+        self.msg['From'] = "save_the_bees@yahoo.com"
+        self.msg['To'] = 'myrealeail@aol.com'
         self.msg['Subject'] = "An update from That Dam Bot"
         
         # add in the message body
