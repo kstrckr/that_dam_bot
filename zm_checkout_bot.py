@@ -80,7 +80,7 @@ def zm_checkout_popen(dir_to_download):
     p = subprocess.Popen(checkout_args, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
 
     try:
-        print('Downloading {}'.format(dir_to_download[27:]))
+        print(u'Downloading {}'.format(dir_to_download[27:]))
         interface = p.communicate()
 
 
