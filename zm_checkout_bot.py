@@ -54,8 +54,8 @@ def download_from_dirs_list(dir_to_download, args):
 
 def zm_authenticate():
 
-    user = "idiot_programmer"
-    pw = "myR3a1Pa55werd"
+    user = "LOLnawD0g"
+    pw = "bcryptrulez"
 
     auth_args = ['zm', '-s', 'EvolProd', '--username', user, '--password', pw, 'getcredentials']
 
@@ -73,7 +73,7 @@ def zm_authenticate():
 
 def zm_checkout_popen(dir_to_download):
 
-    checkout_args = ['zm', 'checkout', '--nowc', '-d', '/Volumes/CalDigit VR2/DAM_BACKUP']
+    checkout_args = ['zm', 'checkout', '--nowc', '-d', '/Volumes/DAM_drive_2/stills_2016/']
 
     checkout_args.append(dir_to_download)
 
@@ -121,7 +121,7 @@ def zm_checkout_popen(dir_to_download):
 if __name__ == "__main__":
 
     
-    args = ['zm', 'checkout', '--nowc', '-d', './']
+    args = ['zm', 'checkout', '--nowc', '-d', "./"]
 
     logging.basicConfig(filename='zm_checkout_log.log',level=logging.DEBUG)
 

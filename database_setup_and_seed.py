@@ -47,7 +47,7 @@ class DbSetup:
 class DbInterface:
 
     query = 'SELECT * FROM dirs WHERE download_complete = 0 LIMIT 1'
-    db_name = 'dirs.db'
+    db_name = 'stills_2016.db'
 
     @classmethod
     def db_monitor(self):
@@ -104,3 +104,14 @@ class DbInterface:
             cur = conn.cursor()
 
             cur.execute('UPDATE dirs SET in_progress = 0, download_complete = ?, finish_time = ? WHERE dir = ?', sql_values)
+
+if __name__ == '__main__':
+
+    from parse_stills_txt_to_path import StillDamDirs
+
+    dirs_2017 = StillDamDirs('stills_2016.txt')
+
+    still_dirs_2017 = DbSetup('stills_2016.db')
+
+    still_dirs_2017.create_table()
+    still_dirs_2017.insert_dirs(dirs_2017.dirs)
