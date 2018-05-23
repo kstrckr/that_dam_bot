@@ -2,7 +2,7 @@ import re
 
 class StillDamDirs:
 
-    def __init__(self, filename):
+    def __init__(self, text_file_to_parse):
 
         self.months = []
 
@@ -14,7 +14,7 @@ class StillDamDirs:
 
         self.dirs = []
 
-        with open(filename, 'r') as raw_text_file:
+        with open(text_file_to_parse, 'r') as raw_text_file:
             raw_text = raw_text_file.read()
             lines = raw_text.split('\n')
 

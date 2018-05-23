@@ -47,10 +47,10 @@ class DbSetup:
 class DbInterface:
 
     query = 'SELECT * FROM dirs WHERE download_complete = 0 LIMIT 1'
-    db_name = 'stills_2016.db'
+    # db_name = 'stills_2016.db'
 
     @classmethod
-    def db_monitor(self):
+    def db_monitor(self, db_name):
 
         with sqlite3.connect(self.db_name) as conn: 
             cur = conn.cursor()
