@@ -20,7 +20,7 @@ class Authenticator:
             # logging.info("Sucesfully Logged Back in at {}".format(return_strf_now()))
             return True
         else:
-            print("Login ERROR")
+            print(interface[1])
             # logging.debug('Login ERROR at {}'.format(return_strf_now()))
 
 

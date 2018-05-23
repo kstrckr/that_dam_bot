@@ -47,12 +47,14 @@ class DbSetup:
 class DbInterface:
 
     query = 'SELECT * FROM dirs WHERE download_complete = 0 LIMIT 1'
-    # db_name = 'stills_2016.db'
+    
+    def __init__(self, db_name):
+        self.db_name = db_name
 
     @classmethod
     def db_monitor(self, db_name):
 
-        with sqlite3.connect(self.db_name) as conn: 
+        with sqlite3.connect(db_name) as conn: 
             cur = conn.cursor()
 
             queue_count = cur.execute('SELECT COUNT(*) FROM dirs WHERE download_complete = 0')
@@ -61,9 +63,9 @@ class DbInterface:
         return queue_check
     
     @classmethod
-    def return_single_directory(self):
+    def return_single_directory(self, db_name):
         
-        with sqlite3.connect(self.db_name) as conn:
+        with sqlite3.connect(db_name) as conn:
             cur = conn.cursor()
 
             cur.execute(self.query)
@@ -76,7 +78,7 @@ class DbInterface:
         return single_download_directory
     
     @classmethod
-    def set_download_initiated(self, dir_in_progress, value):
+    def set_download_initiated(self, dir_in_progress, value, db_name):
         
         if value == 1:
             download_start = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -85,13 +87,13 @@ class DbInterface:
 
         sql_values = [value, download_start, dir_in_progress]
 
-        with sqlite3.connect(self.db_name) as conn:
+        with sqlite3.connect(db_name) as conn:
             cur = conn.cursor()
 
             cur.execute('UPDATE dirs SET in_progress = ?, start_time=? WHERE dir = ?', sql_values)
 
     @classmethod
-    def set_download_complete(self, dir_complete, value):
+    def set_download_complete(self, dir_complete, value, db_name):
 
         if value == 1:
             download_end = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -100,7 +102,7 @@ class DbInterface:
 
         sql_values = [value, download_end, dir_complete]
 
-        with sqlite3.connect(self.db_name) as conn:
+        with sqlite3.connect(db_name) as conn:
             cur = conn.cursor()
 
             cur.execute('UPDATE dirs SET in_progress = 0, download_complete = ?, finish_time = ? WHERE dir = ?', sql_values)

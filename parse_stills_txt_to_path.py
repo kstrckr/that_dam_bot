@@ -48,8 +48,8 @@ class StillDamDirs:
             for point in line[1:]:
                 self.dirs.append(full_path + point)
 
-        for dir in self.dirs:
-            print(dir)
+        # for dir in self.dirs:
+        #     print(dir)
 
         print(len(self.dirs))
             
