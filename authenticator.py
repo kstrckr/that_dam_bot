@@ -2,10 +2,11 @@ import subprocess
 
 class Authenticator:
 
-    def __init__(self):
 
-        self.user = raw_input("Enter Username: ")
-        self.pw = raw_input("Enter Password: ")
+
+    def __init__(self):
+        
+        self.enter_credentials()
 
     def login(self):
 
@@ -21,8 +22,13 @@ class Authenticator:
             return True
         else:
             print(interface[1])
+            return False
             # logging.debug('Login ERROR at {}'.format(return_strf_now()))
 
+    def enter_credentials(self):
+
+        self.user = raw_input("\nEnter Username: ")
+        self.pw = raw_input("Enter Password: ")
 
 if __name__ == "__main__":
 

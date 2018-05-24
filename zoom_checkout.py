@@ -24,13 +24,16 @@ class ZmCheckoutSession:
             print(u'Downloading {}'.format(dir_to_checkout))
             checkout_process = p.communicate()
 
-            if checkout_process[1] == 234:
-                return 234
+            checkout_return_code = p.returncode
+
+            if checkout_return_code != 0:
+                print("zm checkout error with return code {}".format(checkout_return_code))
+                return checkout_return_code
 
             else:
-                print('Succesfully downloaded {}'.format(dir_to_checkout))
-                return 0
+                print(u'Succesfully downloaded {}'.format(dir_to_checkout))
+                return checkout_return_code
         
-        except subprocess.CalledProcessError:
+        # except subprocess.CalledProcessError:
 
-            return -1
+        #     return -1
