@@ -34,6 +34,6 @@ class ZmCheckoutSession:
                 print(u'Succesfully downloaded {}'.format(dir_to_checkout))
                 return checkout_return_code
         
-        # except subprocess.CalledProcessError:
+        except subprocess.CalledProcessError:
 
-        #     return -1
+            return False
