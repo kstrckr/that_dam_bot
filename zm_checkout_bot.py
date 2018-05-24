@@ -31,7 +31,9 @@ if __name__ == "__main__":
     current_db.create_table()
     dbMonitor = DbInterface(db_name)
 
-    local_dir_path = raw_input("Please specify the local path to download to: ")
+    raw_local_dir_path = raw_input("Please specify the local path to download to: ")
+
+    local_dir_path = raw_local_dir_path.strip()
 
     if (dbMonitor.db_monitor(db_name)[0] == 0):
 
@@ -41,7 +43,9 @@ if __name__ == "__main__":
 
         target_dirs.generate_ls_txt()
 
-        current_data = StillDamDirs(current_targets_txt)
+        current_data = StillDamDirs()
+
+        current_data.parse_txt(current_targets_txt)
     
         insert_data = current_db.insert_dirs(current_data.dirs)
 
@@ -67,8 +71,6 @@ if __name__ == "__main__":
 
             # downloaded = download_from_dirs_list(directory, args)
             downloaded = ZmCheckoutSession.checkout_a_dir(local_dir_path, directory)
-
-            print(downloaded)
             
             if downloaded == 0:
                 dbMonitor.set_download_complete(directory, 1, db_name)
