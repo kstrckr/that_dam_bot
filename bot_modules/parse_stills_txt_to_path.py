@@ -22,7 +22,7 @@ class StillDamDirs:
                 raw_text = raw_text_file.read()
                 lines = raw_text.split('\n')
 
-                clean_lines = lines[9:-2]
+                clean_lines = lines[1:-2]
                 self.root_path = lines[-2:-1][0][6:]
 
             for line in enumerate(clean_lines):
@@ -56,12 +56,6 @@ class StillDamDirs:
             
             print("Expected txt file does not exist, make sure DAM path is correct and not empty")
 
-
-
-        # for dir in self.dirs:
-        #     print(dir)
-
-        print(len(self.dirs))
             
 
 
@@ -69,4 +63,5 @@ class StillDamDirs:
 
 if __name__ == '__main__':
 
-    monthly_dirs = StillDamDirs('stills_2017.txt')
+    monthly_dirs = StillDamDirs()
+    monthly_dirs.parse_txt()

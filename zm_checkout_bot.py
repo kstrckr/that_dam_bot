@@ -1,11 +1,13 @@
 import datetime
 import logging
 
-from authenticator import Authenticator as Auth
-from database_setup_and_seed import DbSetup, DbInterface
-from parse_stills_txt_to_path import StillDamDirs
-from zoom_checkout import ZmCheckoutSession
-from zoom_ls_to_text import ZmLsToText
+import bot_modules as m
+
+# from authenticator import Authenticator as Auth
+# from database_setup_and_seed import DbSetup, DbInterface
+# from parse_stills_txt_to_path import m.StillDamDirs
+# from zoom_checkout import m.ZmCheckoutSession
+# from zoom_ls_to_text import m.ZmLsToText
 
 
 def return_strf_now():
@@ -16,7 +18,7 @@ if __name__ == "__main__":
 
     logged_in = False
 
-    auth = Auth()
+    auth = m.Authenticator()
 
     while (not logged_in):
         logged_in = auth.login()
@@ -27,9 +29,9 @@ if __name__ == "__main__":
     db_name = 'current_batch.db'
     current_targets_txt = 'current_targets.txt'
 
-    current_db = DbSetup(db_name)
+    current_db = m.DbSetup(db_name)
     current_db.create_table()
-    dbMonitor = DbInterface(db_name)
+    dbMonitor = m.DbInterface(db_name)
 
     raw_local_dir_path = raw_input("Please specify the local path to download to: ")
 
@@ -39,11 +41,11 @@ if __name__ == "__main__":
 
         dam_checkout_target = raw_input("Please paste the DAM path to target for subdirectory checkout: ")
 
-        target_dirs = ZmLsToText(dam_checkout_target, current_targets_txt)
+        target_dirs = m.ZmLsToText(dam_checkout_target, current_targets_txt)
 
         target_dirs.generate_ls_txt()
 
-        current_data = StillDamDirs()
+        current_data = m.StillDamDirs()
 
         current_data.parse_txt(current_targets_txt)
     
@@ -70,7 +72,7 @@ if __name__ == "__main__":
             dbMonitor.set_download_initiated(directory, 1, db_name)
 
             # downloaded = download_from_dirs_list(directory, args)
-            downloaded = ZmCheckoutSession.checkout_a_dir(local_dir_path, directory)
+            downloaded = m.ZmCheckoutSession.checkout_a_dir(local_dir_path, directory)
             
             if downloaded == 0:
                 dbMonitor.set_download_complete(directory, 1, db_name)
