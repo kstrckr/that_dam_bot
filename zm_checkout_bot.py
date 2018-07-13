@@ -1,65 +1,84 @@
-import shlex
-import subprocess
+import datetime
+import logging
 
+from authenticator import Authenticator as Auth
 from database_setup_and_seed import DbSetup, DbInterface
-# from gamil_sender import EmailUpdate
-from parse_list_output import DamDirs
-
-def insert_dirs_to_db(dirs_list):
-
-    try:
-        db = DbSetup('dirs.db')
-        print('Database Connected')
-    except:
-        print('Error connecting to database')
+from parse_stills_txt_to_path import StillDamDirs
+from zoom_checkout import ZmCheckoutSession
+from zoom_ls_to_text import ZmLsToText
 
 
-    print('Creating Table')
-    db.create_table()
-
-    print('Inserting directory records')
-    db.insert_dirs(dirs_list)
+def return_strf_now():
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
-def download_from_dirs_list(dir_to_download, args):
+if __name__ == "__main__":
 
+    logged_in = False
 
-    full_call = []
+    auth = Auth()
 
-    full_call.extend(args)
-    full_call.append(dir_to_download)
+    while (not logged_in):
+        logged_in = auth.login()
 
-    try:
-        p = subprocess.check_call(full_call)
-        message = dir_to_download + ' has been downloaded'
-        # EmailUpdate(message).send_email_update()
-        message = None
-    except subprocess.CalledProcessError:
-        pass
-        # EmailUpdate.send_email_update(path + ' has failed to download')
+        if (not logged_in):
+            auth.enter_credentials()
 
-# parsed_adult_dirs = DamDirs('zm_full_ls.txt')
-# parsed_kid_dirs = DamDirs('zm_kids_ls.txt', parse_kids=True)
+    db_name = 'current_batch.db'
+    current_targets_txt = 'current_targets.txt'
 
+    current_db = DbSetup(db_name)
+    current_db.create_table()
+    dbMonitor = DbInterface(db_name)
 
-# print(len(parsed_kid_dirs.dirs))
+    raw_local_dir_path = raw_input("Please specify the local path to download to: ")
 
-# for path in parsed_kid_dirs.dirs:
-#     print(path)
+    local_dir_path = raw_local_dir_path.strip()
 
+    if (dbMonitor.db_monitor(db_name)[0] == 0):
 
-# insert_dirs_to_db(parsed_adult_dirs.dirs)
-# insert_dirs_to_db(parsed_kid_dirs.dirs)
+        dam_checkout_target = raw_input("Please paste the DAM path to target for subdirectory checkout: ")
 
-args = ['zm', 'checkout', '--nowc', '-d', './']
+        target_dirs = ZmLsToText(dam_checkout_target, current_targets_txt)
 
-while (DbInterface.db_monitor()[0] > 0):
-    print(DbInterface.db_monitor()[0])
+        target_dirs.generate_ls_txt()
 
-    db_dir_record = DbInterface.return_single_directory()
+        current_data = StillDamDirs()
 
-    directory = db_dir_record[0]
+        current_data.parse_txt(current_targets_txt)
     
-    DbInterface.download_initiated(directory)
-    download_from_dirs_list(directory, args)
-    DbInterface.download_complete(directory)
+        insert_data = current_db.insert_dirs(current_data.dirs)
+
+    else:
+        print("Continuintinuing to download directory in progress.\n")
+
+    logging.basicConfig(filename='zm_checkout_log.log',level=logging.DEBUG)
+
+    
+    
+
+    # logging.info("Downloads started at {}".format(return_strf_now()))
+
+    while (dbMonitor.db_monitor(db_name)[0] > 0):
+        try:
+            print('{} Directories Remaining'.format(dbMonitor.db_monitor(db_name)[0]))
+
+            db_dir_record = dbMonitor.return_single_directory(db_name)
+
+            directory = db_dir_record[0]
+            
+            dbMonitor.set_download_initiated(directory, 1, db_name)
+
+            # downloaded = download_from_dirs_list(directory, args)
+            downloaded = ZmCheckoutSession.checkout_a_dir(local_dir_path, directory)
+            
+            if downloaded == 0:
+                dbMonitor.set_download_complete(directory, 1, db_name)
+            elif downloaded == 234:
+                dbMonitor.set_download_initiated(directory, 0, db_name)
+                auth.login()
+
+        except KeyboardInterrupt:
+            print("\n\nDownload stopped manually, restart process to resume")
+            logging.info("Downloads manually stopped at {}".format(return_strf_now()))
+            break
